@@ -1,0 +1,61 @@
+Agisci come uno sviluppatore senior. Dobbiamo correggere dei bug critici e implementare nuove funzionalità logiche nella mia app di gestione calcetto. Applica queste modifiche al backend (Node.js/Express) e al frontend:
+
+1. Correzione Bug e Validazione:
+
+Bug Ruolo: Risolvi il problema del salvataggio del ruolo: il valore selezionato nella <select> non viene inviato correttamente al database (passa 'null'). Assicurati che l'invio del form catturi correttamente il valore selezionato.
+
+Controllo Duplicati: Prima di aggiungere un nuovo giocatore, verifica se il nome esiste già nel database. Se sì, blocca l'operazione e restituisci un messaggio: 'Errore: Giocatore già presente'.
+
+2. Interfaccia Dashboard:
+
+Ordinamento: Aggiungi la possibilità di ordinare la tabella cliccando sulle intestazioni di colonna (Nome, Ruolo, Rating, Presenze, Vittorie). Mantenere la barra di ricerca esistente.
+
+Statistiche Dinamiche: Sopra la tabella, mostra:
+
+Il giocatore con più vittorie totali.
+
+Il giocatore con il miglior rapporto 'Vittorie / Presenze' (filtra solo chi ha almeno 3 presenze).
+
+Multiselezione: Aggiungi una colonna di checkbox in ogni riga della tabella giocatori e un bottone 'Elimina Selezionati' per la cancellazione di massa dal database.
+
+Aggiungi un tasto Elimina statistiche che azzeri presenze e vittorie
+
+
+3. Logica Generazione Squadre:
+
+I nomi delle squadre devono essere: 
+
+Parametro Livello: Rinomina il precedente 'Forza' in 'Livello'.
+
+Formula Livello: Implementa rigorosamente: Livello = (rating * 2.0) + ((vittorie / (presenze + 1)) * 5.0).
+
+Riporta da qualche parte una nota che indichi il calcolo del livello
+
+Distribuzione Numerica Corretta: L'algoritmo deve garantire il bilanciamento numerico. Se hai 18 giocatori, deve dividere 6-6-6. Se hai 17, deve dividere 6-6-5. La differenza tra le squadre non deve mai essere superiore a 1.
+
+Flag 'Seconda Partita': Nella pagina di selezione partecipanti, aggiungi un flag (checkbox) 'Seconda Partita' accanto a ogni giocatore.
+
+Logica: I giocatori con questo flag attivo devono essere inseriti prioritariamente nella 'Squadra 3'.
+
+Dopo aver posizionato chi deve fare la seconda partita, distribuisci i restanti giocatori usando la logica del 'Serpentine Draft' basata sul 'Livello', cercando di rispettare il vincolo dei ruoli (2 difensori, 2 attaccanti, resto centrocampisti).
+
+Visualizzazione Risultati: Nella vista di generazione squadre:
+
+Accanto al nome di ogni giocatore, mostra il valore 'Livello' (calcolato) e il numero totale di vittorie.
+
+Sotto ogni squadra, mostra la 'Somma Livelli Totale' per verificare l'equilibrio.
+
+4. Interfaccia Risultati e Export:
+
+Mantieni un bottone 'Copia per WhatsApp' che formatti il testo come:
+'Squadra A: [Nomi...]
+Squadra B: [Nomi...]
+Squadra C: [Nomi...]' (Escludi i dettagli tecnici come Livello e Vittorie da questo testo).
+
+5. Aggiungi una pagina con il nome palmares e indichi il numero di vittorie per partecipanti suddivise per vittorie (Es: 4 vittorie con lista nomi.. fino a 1 vittoria. Non mostrare le zero vittorie)
+
+6. Aggiungi una password all'accesso. Impostala come "CalcettoEstivo" )
+
+7. Tecnologie:
+
+Usa Bootstrap per un layout moderno, pulito e mobile-friendly."

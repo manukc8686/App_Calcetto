@@ -1,0 +1,477 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification for Torneo Calcetto
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: giocatori
+    description: Players management
+  - name: partite
+    description: Match and team generation
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /giocatori:
+    get:
+      operationId: listGiocatori
+      tags: [giocatori]
+      summary: Get all players
+      responses:
+        "200":
+          description: List of players
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Giocatore"
+    post:
+      operationId: createGiocatore
+      tags: [giocatori]
+      summary: Create a new player
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GiocatoreInput"
+      responses:
+        "201":
+          description: Created player
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Giocatore"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Duplicate name
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /giocatori/bulk-delete:
+    post:
+      operationId: bulkDeleteGiocatori
+      tags: [giocatori]
+      summary: Delete multiple players by IDs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkDeleteInput"
+      responses:
+        "200":
+          description: Deleted count
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkDeleteResult"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /giocatori/{id}:
+    get:
+      operationId: getGiocatore
+      tags: [giocatori]
+      summary: Get a player by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Player
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Giocatore"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteGiocatore
+      tags: [giocatori]
+      summary: Delete a player
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateGiocatore
+      tags: [giocatori]
+      summary: Update a player (nome, ruolo, rating)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GiocatoreUpdate"
+      responses:
+        "200":
+          description: Updated player
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Giocatore"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /giocatori/{id}/presenze:
+    post:
+      operationId: incrementPresenze
+      tags: [giocatori]
+      summary: Increment player presenze by 1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated player
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Giocatore"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: decrementPresenze
+      tags: [giocatori]
+      summary: Decrement player presenze by 1 (min 0)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated player
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Giocatore"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /giocatori/{id}/vittorie:
+    post:
+      operationId: incrementVittorie
+      tags: [giocatori]
+      summary: Increment player vittorie by 1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated player
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Giocatore"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: decrementVittorie
+      tags: [giocatori]
+      summary: Decrement player vittorie by 1 (min 0)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated player
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Giocatore"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /giocatori/{id}/reset-stats:
+    post:
+      operationId: resetStats
+      tags: [giocatori]
+      summary: Reset player presenze and vittorie to 0
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated player
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Giocatore"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /genera-squadre:
+    post:
+      operationId: generaSquadre
+      tags: [partite]
+      summary: Generate 3 balanced teams from selected players
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GeneraSquadreInput"
+      responses:
+        "200":
+          description: Generated teams
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneraSquadreResult"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /stats:
+    get:
+      operationId: getStats
+      tags: [giocatori]
+      summary: Get tournament statistics
+      responses:
+        "200":
+          description: Stats summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stats"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    Giocatore:
+      type: object
+      required: [id, nome, ruolo, rating, presenze, vittorie]
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        ruolo:
+          type: string
+          enum: [Attaccante, Difensore, Centrocampista, Portiere]
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        presenze:
+          type: integer
+          minimum: 0
+        vittorie:
+          type: integer
+          minimum: 0
+    GiocatoreInput:
+      type: object
+      required: [nome, ruolo, rating]
+      properties:
+        nome:
+          type: string
+          minLength: 1
+        ruolo:
+          type: string
+          enum: [Attaccante, Difensore, Centrocampista, Portiere]
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+    GiocatoreUpdate:
+      type: object
+      properties:
+        nome:
+          type: string
+          minLength: 1
+        ruolo:
+          type: string
+          enum: [Attaccante, Difensore, Centrocampista, Portiere]
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+    BulkDeleteInput:
+      type: object
+      required: [ids]
+      properties:
+        ids:
+          type: array
+          items:
+            type: integer
+          minItems: 1
+    BulkDeleteResult:
+      type: object
+      required: [deleted]
+      properties:
+        deleted:
+          type: integer
+    Stats:
+      type: object
+      required: [totaleGiocatori, totalePresenze, totaleVittorie, miglioreAttacco, migliorePortiere]
+      properties:
+        totaleGiocatori:
+          type: integer
+        totalePresenze:
+          type: integer
+        totaleVittorie:
+          type: integer
+        miglioreAttacco:
+          type: ["string", "null"]
+        migliorePortiere:
+          type: ["string", "null"]
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+    GeneraSquadreInput:
+      type: object
+      required: [giocatoriIds]
+      properties:
+        giocatoriIds:
+          type: array
+          items:
+            type: integer
+          minItems: 3
+        secondaPartitaIds:
+          type: array
+          items:
+            type: integer
+    GiocatoreConLivello:
+      type: object
+      required: [id, nome, ruolo, rating, presenze, vittorie, livello]
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        ruolo:
+          type: string
+          enum: [Attaccante, Difensore, Centrocampista, Portiere, Virtuale]
+        rating:
+          type: integer
+        presenze:
+          type: integer
+        vittorie:
+          type: integer
+        livello:
+          type: number
+        virtuale:
+          type: boolean
+    Squadra:
+      type: object
+      required: [nome, giocatori, livelleTotale]
+      properties:
+        nome:
+          type: string
+        giocatori:
+          type: array
+          items:
+            $ref: "#/components/schemas/GiocatoreConLivello"
+        livelleTotale:
+          type: number
+    GeneraSquadreResult:
+      type: object
+      required: [squadraA, squadraB, squadraC]
+      properties:
+        squadraA:
+          $ref: "#/components/schemas/Squadra"
+        squadraB:
+          $ref: "#/components/schemas/Squadra"
+        squadraC:
+          $ref: "#/components/schemas/Squadra"

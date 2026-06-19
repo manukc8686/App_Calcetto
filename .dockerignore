@@ -1,0 +1,16 @@
+node_modules
+**/node_modules
+**/dist
+**/.tsbuildinfo
+.git
+.github
+.replit
+.replitignore
+replit.md
+artifacts/calcetto.db
+artifacts/mockup-sandbox
+attached_assets
+*.log
+.env
+.env.*
+.DS_Store

@@ -1,0 +1,49 @@
+Pagina di Selezione Partecipanti (presenze.html):
+
+Mostra la lista di tutti i giocatori con una checkbox per selezionarli per la partita.
+
+Aggiungi un campo di ricerca per filtrare i giocatori per nome.
+
+Aggiungi contatori in tempo reale in alto: 'Totale selezionati', 'Numero Portieri', 'Numero Giocatori di Movimento'.
+
+Implementa il salvataggio automatico dello stato delle checkbox nel localStorage del browser.
+
+3. Algoritmo di Generazione Squadre (/api/genera-squadre):
+La logica deve essere la seguente:
+
+Calcolo Forza Giocatore: Prima di distribuire, calcola per ogni giocatore selezionato il valore Forza_Giocatore = (rating * 2.0) + (vittorie * 0.2).
+
+Gestione Portieri:
+
+3 portieri: 1 per squadra.
+
+2 portieri: 1 alla squadra A, 1 alla B, alla squadra C assegna un 'Portiere Virtuale' (rating 3, forza 6.0).
+
+1 portiere: 1 alla squadra A, 'Portiere Virtuale' alle squadre B e C.
+
+Distribuzione Giocatori di Movimento:
+
+Dividi i giocatori in modo che la differenza tra squadre sia al massimo 1 (es. 6-6-5).
+
+Ordina i giocatori di movimento per Forza_Giocatore decrescente.
+
+Usa la tecnica 'Serpentine Draft' (Squadra A -> B -> C -> C -> B -> A...) per assegnare i giocatori basandoti sul valore Forza_Giocatore.
+
+Vincolo Ruoli: Cerca di assegnare 2 difensori e 2 attaccanti per squadra, usando i centrocampisti come jolly. La priorità assoluta è l'equilibrio della Forza_Totale_Squadra.
+
+4. Interfaccia Risultati:
+
+Mostra le 3 squadre generate in una vista chiara, mostrando il nome, il ruolo e la 'Forza_Giocatore' di ogni membro.
+
+Includi la Forza_Totale_Squadra (somma delle forze dei membri) sotto ogni squadra per verificarne l'equilibrio.
+
+Aggiungi un pulsante 'Copia per WhatsApp' che formatti il testo come:
+'Squadra A: [Nomi...] (Totale: X)
+Squadra B: [Nomi...] (Totale: Y)
+Squadra C: [Nomi...] (Totale: Z)'
+
+5. Interfaccia Generale:
+
+Usa Bootstrap per un layout moderno, mobile-responsive.
+
+Permetti di modificare il ruolo, le presenze e le vittorie di ogni giocatore direttamente dalla tabella principale nella dashboard, con salvataggio immediato (lato server).
